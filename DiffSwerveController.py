@@ -17,7 +17,7 @@ from DiffSwerve import DiffSwerve
 import Helper
 controller = DiffSwerveController()
 sim = DiffSwerve()
-for i in range(0, 1000):
+for i in range(0, 10000):
     (a,b) = controller.step(45, 150, sim.angle, sim.v)
-    sim.step(a,b,.001)
+    sim.step(12,-12,.001)
     print(i*.001, sim.angle, sim.v)
