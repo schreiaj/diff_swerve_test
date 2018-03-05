@@ -18,22 +18,24 @@ class DiffSwerve:
         self.w_w = 0.0 # wheel omega
         self.angle =0
         self.wheel_diameter = 2.5
-        self.k_steer_i = 4.0
-        self.k_drive_i = 1.0
+        self.k_steer_i = .47
+        self.k_drive_i = .05
         self.v = 0
+        self.v_ad = 0
+        self.v_bd = 0
 
 
     def step(self, vA, vB, dt):
         t_a = self.motorA.torqueAtRPM(vA, self.w_a * self.reductionA) / self.reductionA
         t_b = self.motorB.torqueAtRPM(vB, self.w_b * self.reductionB) / self.reductionB
-        self.w_a = t_a/self.k_steer_i * dt
-        self.w_b = t_b/self.k_steer_i * dt
-        v_ad = self.w_a * 2 * math.pi * self.r_ab
-        v_bd = self.w_b * 2 * math.pi * self.r_ab
-        v_z = (v_ad + v_bd)/2
+        self.w_a = (t_a/self.k_steer_i) * dt
+        self.w_b = (t_b/self.k_steer_i) * dt
+        self.v_ad = self.v_ad + self.w_a * 2 * math.pi * self.r_ab
+        self.v_bd = self.v_bd + self.w_b * 2 * math.pi * self.r_ab
+        v_z = (self.v_ad + self.v_bd)/2
         w_z = v_z / (2*math.pi * (self.r_ab))
         self.angle = w_z * dt + self.angle
-        self.w_w = ((v_ad - v_bd)/2)/(2*math.pi*self.r_d)
+        self.w_w = ((self.v_ad - self.v_bd)/2)/(2*math.pi*self.r_d)
         self.v = self.w_w * math.pi * self.wheel_diameter
 
 

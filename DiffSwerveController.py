@@ -10,7 +10,7 @@ class DiffSwerveController:
         angleError = targetAngle - currentAngle
         speedError = targetRPM - currentRPM
         out = self.k_p_angle * angleError
-        return (out + speedError * self.k_p_rpm, out + speedError * self.k_p_rpm)
+        return (out + speedError * self.k_p_rpm, out - speedError * self.k_p_rpm)
 
 
 from DiffSwerve import DiffSwerve
@@ -19,5 +19,5 @@ controller = DiffSwerveController()
 sim = DiffSwerve()
 for i in range(0, 1000):
     (a,b) = controller.step(45, 150, sim.angle, sim.v)
-    sim.step(12,12,.001)
-    print(i*.01, sim.angle, sim.v)
+    sim.step(a,b,.001)
+    print(i*.001, sim.angle, sim.v)
